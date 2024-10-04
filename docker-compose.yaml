@@ -1,0 +1,31 @@
+services:
+  # MongoDB 服务
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: chatapp_user  # 替換為你的用戶名
+      MONGO_INITDB_ROOT_PASSWORD: abc123  # 替換為你的密碼
+
+  # MySQL 服务
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"  # 映射到主機的 3306 端口
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123123          
+      MYSQL_DATABASE: chatapp_user              
+      MYSQL_USER: abc                           
+      MYSQL_PASSWORD: abc123
+
+    
+                  
+    volumes:
+      - mysql-data:/var/lib/mysql                
+
+volumes:
+  mongo-data:                                
+  mysql-data:                                
