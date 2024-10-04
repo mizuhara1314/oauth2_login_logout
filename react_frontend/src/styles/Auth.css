@@ -1,0 +1,105 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.auth-container {
+  max-width: 350px; /* 最大宽度设置为 350px */
+  width: 100%;
+  height: 60vh;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8); /* 设置透明背景 */
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.auth-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.auth-container h2 {
+  text-align: center;
+  color: #333;
+  font-weight: 600;
+}
+
+input {
+  width: 100%; /* 宽度设为 100% */
+  max-width: 300px; /* 设置输入框最大宽度为 300px */
+  padding: 10px; /* 输入框内边距 */
+  margin-bottom: 10px; /* 输入框与按钮之间的间距 */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.auth-button {
+  width: 100%; /* 按钮宽度设为 100% */
+  padding: 12px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  margin-bottom: 5px; /* 调整按钮之间的间距 */
+}
+
+.auth-button:hover {
+  background-color: #45a049;
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+}
+
+.error-message {
+  color: #e53935;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.oauth-section {
+  text-align: center;
+  margin-top: 10px; /* 调整整体距离 */
+}
+
+.oauth-section h3 {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.oauth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.oauth-button {
+  background-color: #db4437; /* Google 红色 */
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%; /* OAuth 按钮宽度设为 100% */
+  margin-top: 5px; /* 调整按钮之间的间距 */
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.oauth-button:hover {
+  background-color: #c5382b;
+  box-shadow: 0 4px 10px rgba(219, 68, 55, 0.2);
+}
