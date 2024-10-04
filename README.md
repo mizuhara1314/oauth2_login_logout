@@ -58,7 +58,7 @@ npm start
 
 # 5. 改進
 
-目前通訊部分還沒做，之後會設計基於postgreSql儲存使用者註冊資料，redis暫存聊天室最新50筆數據，串接Google Cloud Vision API過濾不當圖片
+目前通訊部分還沒做，之後會設計基於mySql儲存使用者註冊資料，redis暫存聊天室最新50筆數據，串接Google Cloud Vision API過濾不當圖片
 
 
 
