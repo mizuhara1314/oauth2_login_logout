@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/3b6dcf56-6e3a-48b4-ac8a-a61f66ae1037
 ```bash
 docker-compose up 
 ```
-運行mongodb
+運行mongodb與mysql
 
 在後端項目下運行代碼：
 
