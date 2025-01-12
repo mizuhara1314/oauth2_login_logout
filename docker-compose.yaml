@@ -1,3 +1,5 @@
+version: '3.9' # 使用最新版本的 Compose 文件格式
+
 services:
   # MongoDB 服务
   mongo:
@@ -7,25 +9,31 @@ services:
     volumes:
       - mongo-data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: chatapp_user  # 替換為你的用戶名
-      MONGO_INITDB_ROOT_PASSWORD: abc123  # 替換為你的密碼
+      MONGO_INITDB_ROOT_USERNAME: chatapp_user 
+      MONGO_INITDB_ROOT_PASSWORD: abc123       
 
   # MySQL 服务
   mysql:
     image: mysql:8.0
     ports:
-      - "3306:3306"  # 映射到主機的 3306 端口
+      - "3306:3306"  
     environment:
       MYSQL_ROOT_PASSWORD: abc123123          
       MYSQL_DATABASE: chatapp_user              
       MYSQL_USER: abc                           
       MYSQL_PASSWORD: abc123
-
-    
-                  
     volumes:
       - mysql-data:/var/lib/mysql                
 
+  # Redis 服务
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"  
+    volumes:
+      - redis-data:/data 
+
 volumes:
-  mongo-data:                                
-  mysql-data:                                
+  mongo-data: 
+  mysql-data: 
+  redis-data: 
