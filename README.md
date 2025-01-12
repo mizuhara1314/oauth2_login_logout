@@ -1,5 +1,5 @@
 # 1. 簡介
-基於google-passport-oauth2來實現三方授權登入和登出，並結合jwt認證技術，根路由是chatroom
+基於google-passport-oauth2來實現三方授權登入和登出，並結合jwt認證技術。根路由是chatroom，聊天訊息用redis暫存
 
 # 2. 效果：
 
