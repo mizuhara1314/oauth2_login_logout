@@ -1,32 +1,43 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // 导入 useNavigate
-import socket from '../services/socket'; // 假设你已经在 services 中设置好 WebSocket 连接
-import '../styles/ChatRoom.css'; // 导入样式
-import MessageInput from './MessageInput'; // 文字输入组件
-import ImageUpload from './ImageUpload'; // 图片上传组件
-import Logout from './Logout'; // 导入 Logout 组件
+import { useNavigate } from 'react-router-dom';
+import socket from '../services/socket'; 
+import '../styles/ChatRoom.css';
+import MessageInput from './MessageInput';
+import ImageUpload from './ImageUpload';
+import Logout from './Logout';
 
 const ChatRoom = () => {
   const [messages, setMessages] = useState([]);
-  const messageEndRef = useRef(null); // 用于自动滚动到底部
-  const navigate = useNavigate(); // 创建导航函数
+  const messageEndRef = useRef(null);
+  const navigate = useNavigate();
 
-  // 在组件挂载时检查 JWT
+  // 检查 JWT
   useEffect(() => {
-    const token = localStorage.getItem('token'); // 假设 JWT 存储在 localStorage 中
+    const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/login'); // 如果没有 JWT，重定向到登录页面
+      navigate('/login');
     }
-  }, [navigate]); // 确保 navigate 被传入依赖列表中
+  }, [navigate]);
 
-  // 监听 WebSocket 消息
+  // 监听 WebSocket
   useEffect(() => {
+    // 显式连接到 WebSocket 服务器
+    socket.connect();
+
+    // 加载历史消息
+    socket.on('load-messages', (loadedMessages) => {
+      setMessages(loadedMessages);
+    });
+
+    // 实时接收消息
     socket.on('message', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    // 清理 WebSocket 事件监听
     return () => {
-      socket.off('message'); // 清理事件监听
+      socket.off('load-messages');
+      socket.off('message');
     };
   }, []);
 
@@ -44,7 +55,7 @@ const ChatRoom = () => {
     const message = {
       type: 'text',
       content: text,
-      sender: 'user',  // 假设你有用户信息
+      sender: 'user',
       timestamp: new Date(),
     };
 
@@ -67,17 +78,9 @@ const ChatRoom = () => {
     setMessages((prevMessages) => [...prevMessages, message]);
   };
 
-  // 处理登出逻辑
-  const handleLogout = () => {
-    console.log('User logged out');
-    localStorage.removeItem('token'); // 移除 JWT
-    socket.disconnect(); // 断开 socket 连接（如果需要）
-    navigate('/login'); // 导航到登录页面
-  };
-
   return (
     <div className="chat-room">
-      <Logout onLogout={handleLogout} /> {/* 添加 Logout 组件 */}
+      <Logout onLogout={() => navigate('/login')} />
       <div className="messages">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.sender}`}>
@@ -88,7 +91,7 @@ const ChatRoom = () => {
             <span className="timestamp">{new Date(message.timestamp).toLocaleTimeString()}</span>
           </div>
         ))}
-        <div ref={messageEndRef}></div> {/* 自动滚动的锚点 */}
+        <div ref={messageEndRef}></div>
       </div>
       <div className="input-container">
         <MessageInput onSend={sendMessage} />
