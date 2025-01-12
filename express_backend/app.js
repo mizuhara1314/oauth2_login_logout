@@ -1,10 +1,30 @@
-require('dotenv').config(); // 載入環境變數
+require('dotenv').config(); // 载入环境变量
 const express = require('express');
-const passport = require('passport');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const oauthService = require('./services/oauthService'); // 引入 OAuth 服务
-const { initializeDatabaseConnection, registerUser, loginUser } = require('./services/loginService'); // 引入 loginService 和需要的函數
+const passport = require('passport');
+const { Server } = require('socket.io');
+const http = require('http');
+const redis = require('redis'); // 引入 Redis
+const oauthService = require('./services/oauthService');
+const { initializeDatabaseConnection, registerUser, loginUser } = require('./services/loginService');
+const chatSocket = require('./sockets/chatSocket'); // 引入 WebSocket 逻辑
+
+// 创建 Redis 客户端
+const redisClient = redis.createClient({
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+    }
+});
+redisClient.connect();
+redisClient.on('error', (err) => {
+    console.error('Redis 错误:', err);
+});
+
+redisClient.on('connect', () => {
+    console.log('已连接到 Redis');
+});
 
 // MongoDB 连接
 mongoose.connect(process.env.MONGODB_URI, {
@@ -16,20 +36,20 @@ mongoose.connect(process.env.MONGODB_URI, {
 // 初始化 Express 应用
 const app = express();
 
-// 使用 CORS 中间件，允许跨域请求
-app.use(cors());
-app.use(express.json()); // 解析 JSON 請求體
+// 中间件
+app.use(cors()); // 允许跨域
+app.use(express.json()); // 解析 JSON 请求体
 
-// 初始化 MySQL 连接并创建 users 表
+// 初始化 MySQL 连接
 initializeDatabaseConnection();
 
-// 初始化 Passport 中间件
+// 初始化 Passport
 app.use(passport.initialize());
 
-// 引入 OAuth 路由
+// OAuth 路由
 oauthService(app);
 
-// 註冊和登入路由
+// 注册和登录路由
 app.post('/auth/register', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -50,8 +70,22 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
+// 创建 HTTP 服务器
+const server = http.createServer(app);
+
+// 初始化 Socket.io
+const io = new Server(server, {
+    cors: {
+        origin: '*', // 设置允许的前端地址
+        methods: ['GET', 'POST'],
+    },
+});
+
+// WebSocket 逻辑，传递 redisClient 以供存储消息到 Redis
+chatSocket(io, redisClient);
+
 // 启动服务器
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`服务器正在运行在 http://localhost:${PORT}`);
 });
