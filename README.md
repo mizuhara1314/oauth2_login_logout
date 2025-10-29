@@ -60,6 +60,7 @@ npm start
 
 之後會串接Google Cloud Vision API過濾不當圖片
 
+可視情況是否允許同時登錄(islogin)
 
 
 
